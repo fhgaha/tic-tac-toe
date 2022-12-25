@@ -49,11 +49,12 @@ class Game extends React.Component {
     this.state = {
       history: [
         {
-          squares: Array(9).fill(null)
+          squares: Array(9).fill(null),
+          clickedSquare: '',
         }
       ],
       stepNumber: 0,
-      xIsNext: true
+      xIsNext: true,
     };
   }
 
@@ -65,21 +66,23 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
+
     this.setState({
       history: history.concat([
         {
-          squares: squares
+          squares: squares,
+          clickedSquare: getSquareColRow(i),
         }
       ]),
       stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
+      xIsNext: !this.state.xIsNext,
     });
   }
 
   jumpTo(step) {
     this.setState({
       stepNumber: step,
-      xIsNext: (step % 2) === 0
+      xIsNext: (step % 2) === 0,
     });
   }
 
@@ -89,9 +92,10 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ?
-        'Go to move #' + move :
-        'Go to game start';
+      const desc = move
+        ? `Go to move #${move} ${history[move].clickedSquare}`
+        : `Go to game start`;
+
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
@@ -99,12 +103,9 @@ class Game extends React.Component {
       );
     });
 
-    let status;
-    if (winner) {
-      status = "Winner: " + winner;
-    } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
-    }
+    const status = winner
+      ? "Winner: " + winner
+      : "Next player: " + (this.state.xIsNext ? "X" : "O");
 
     return (
       <div className="game">
@@ -146,4 +147,20 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function getSquareColRow(num) {
+  // (col, row)
+  switch (num) {
+    case 0: return '(1, 1)'
+    case 1: return '(2, 1)'
+    case 2: return '(3, 1)'
+    case 3: return '(1, 2)'
+    case 4: return '(2, 2)'
+    case 5: return '(3, 2)'
+    case 6: return '(1, 3)'
+    case 7: return '(2, 3)'
+    case 8: return '(3, 3)'
+    default: console.log('clicked square number is not in range');
+  }
 }
