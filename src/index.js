@@ -50,7 +50,7 @@ class Game extends React.Component {
       history: [
         {
           squares: Array(9).fill(null),
-          clickedSquare: '',
+          clickedSquare: -1,
         }
       ],
       stepNumber: 0,
@@ -71,7 +71,7 @@ class Game extends React.Component {
       history: history.concat([
         {
           squares: squares,
-          clickedSquare: getSquareColRow(i),
+          clickedSquare: i,
         }
       ]),
       stepNumber: history.length,
@@ -93,12 +93,17 @@ class Game extends React.Component {
 
     const moves = history.map((step, move) => {
       const desc = move
-        ? `Go to move #${move} ${history[move].clickedSquare}`
+        ? `Go to move #${move} ${getSquareColRow(history[move].clickedSquare)}`
         : `Go to game start`;
 
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button
+            style={{ fontWeight: this.state.stepNumber === move ? 'bold' : 'normal' }}
+            onClick={() => this.jumpTo(move)}
+          >
+            {desc}
+          </button>
         </li>
       );
     });
@@ -161,6 +166,6 @@ function getSquareColRow(num) {
     case 6: return '(1, 3)'
     case 7: return '(2, 3)'
     case 8: return '(3, 3)'
-    default: console.log('clicked square number is not in range');
+    default: console.log('smth is wrong');
   }
 }
