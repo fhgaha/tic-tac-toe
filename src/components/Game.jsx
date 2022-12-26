@@ -49,7 +49,7 @@ export class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const winnerData = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
       const description = move
@@ -68,16 +68,18 @@ export class Game extends React.Component {
       );
     });
 
-    const status = winner
-      ? "Winner: " + winner
+    const status = winnerData
+      ? "Winner: " + winnerData.name
       : "Next player: " + (this.state.xIsNext ? "X" : "O");
 
     return (
       <div className="game">
         <div className="game-board">
           <Board
+            winSquares={winnerData ? winnerData.squares : null}
             squares={current.squares}
-            onClick={i => this.handleClick(i)} />
+            onClick={i => this.handleClick(i)}
+          />
         </div>
         <div className="game-info">
           <div>{status}</div>
@@ -85,7 +87,8 @@ export class Game extends React.Component {
           <Toggle
             label="Sort By Decending"
             toggled={false}
-            onClick={() => this.setState({ descending: this.state.descending ? false : true })} />
+            onClick={() => this.setState({ descending: !this.state.descending })}
+          />
         </div>
       </div>
     );

@@ -3,11 +3,16 @@ import { Square } from "./Square";
 
 export class Board extends React.Component {
   renderSquare(i) {
+    const winSquares = this.props.winSquares;
     return (
       <Square
         key={i}
         value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)} />
+        onClick={() => this.props.onClick(i)}
+        colored={winSquares
+          && (winSquares[0] === i || winSquares[1] === i || winSquares[2] === i) ? true : false
+        }
+      />
     );
   }
 
