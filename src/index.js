@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { Toggle } from './components/toggleButton/toggleButton';
 
 function Square(props) {
   return (
@@ -14,6 +15,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
       <Square
+        key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
@@ -28,7 +30,7 @@ class Board extends React.Component {
         rows.push(this.renderSquare(i + j));
       }
       cols.push(
-        <div className="board-row">
+        <div key={i} className="board-row">
           {rows.slice(-3)}
         </div>
       )
@@ -86,7 +88,7 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move
+      const description = move
         ? `Go to move #${move} ${getSquareColRow(history[move].clickedSquare)}`
         : `Go to game start`;
 
@@ -96,7 +98,7 @@ class Game extends React.Component {
             style={{ fontWeight: this.state.stepNumber === move ? 'bold' : 'normal' }}
             onClick={() => this.jumpTo(move)}
           >
-            {desc}
+            {description}
           </button>
         </li>
       );
@@ -116,7 +118,12 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <ol >{this.state.descending ? moves.reverse() : moves}</ol>
+          <Toggle
+            label="Sort By Decending"
+            toggled={false}
+            onClick={() => this.setState(this.state.descending ? { descending: false } : { descending: true })}
+          />
         </div>
       </div>
     );
